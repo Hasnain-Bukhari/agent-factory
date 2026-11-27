@@ -1,42 +1,41 @@
 ---
 name: finance-os
-description: Design and evolve the private Finance OS agent for personal-finance records, calculations, imports, reports, security, or channel adapters. Use for Finance OS work; not for regulated financial advice or unrelated bookkeeping systems.
+description: Use for personal income, expenses, financial goals, monthly budgets, investments, or Finance OS preferences. The local encrypted store is authoritative; do not use it for unrelated accounting or regulated financial advice.
 ---
 
 # Finance OS
 
-Build a zero-code-for-the-user personal finance system whose domain core is independent of chat channels and storage formats.
+Use the local Finance OS for five capabilities only: income, expenses, goals, budgets, and investments. Defaults are THB and Asia/Bangkok. Other currencies remain separate; never add unlike currencies together.
 
-## Current phase
+## Work with the store
 
-Phase 6 adds local-only dashboard, synthetic feed, least-privilege scheduling, and offline notification interfaces over the same narrow application boundary. Phases 2–6 are gate-passed with synthetic records and injected substitutes only. Live ChatGPT, Telegram, feed, or notification connections still require separate consent and deployment review. Continue using synthetic records until the limited-pilot disclosure and fresh explicit approval. Do not request secrets, contact external services during tests, or expose the service publicly.
+Run commands from this directory with `node finance.mjs`. Initialize or verify access with `node finance.mjs init`. For a write, construct one JSON command, start `node finance.mjs apply`, send the JSON on standard input, and close standard input. Report success only when the command returns `"saved": true`.
 
-## Defaults and invariants
+Command shapes:
 
-- Use THB as the base currency and Asia/Bangkok for user-facing time unless the user changes a preference.
-- Store money as integer minor units with an ISO 4217 currency code.
-- Preserve source currency and exchange-rate provenance.
-- Cover income, expenses, accounts, linked transfers, investments, liabilities, budgets, goals, net-worth snapshots, and preferences.
-- Validate before mutation, use stable IDs and idempotency keys, and produce an audit event for every accepted mutation.
-- Do not expose secrets or sensitive financial values in logs, errors, or audit metadata.
+- Income: `{"type":"record_income","data":{"amount":"50000","currency":"THB","date":"2026-11-27","source":"Salary","category":"salary","notes":""}}`
+- Expense: `{"type":"record_expense","data":{"amount":"85","currency":"THB","date":"2026-11-27","description":"Coffee","category":null,"payment_method":"","notes":""}}`
+- Goal: `{"type":"create_goal","data":{"name":"Emergency fund","target_amount":"300000","currency":"THB","target_date":null}}`
+- Goal progress: `{"type":"allocate_goal","data":{"goal_id":"...","amount":"10000","date":"2026-11-27"}}`
+- Budget: `{"type":"create_budget","data":{"amount":"20000","currency":"THB","month":"2026-11","category":null}}`
+- Investment: `{"type":"record_investment","data":{"action":"contribution|purchase|sale|withdrawal|dividend|valuation|target","asset":"Index fund","amount":"20000","currency":"THB","date":"2026-11-27"}}`
+- Correct: `{"type":"update_record","data":{"record_type":"expense","id":"...","changes":{"amount":"95","category":"dining"}}}`
+- Delete: `{"type":"delete_record","data":{"record_type":"expense","id":"..."}}`
+- Preference: `{"type":"set_preference","data":{"key":"currency|timezone|category_rules","value":"..."}}`
 
-## Route by task
+Use `node finance.mjs list --type income|expense|goal|budget|investment` to find record IDs. Use `node finance.mjs summary --kind overview|income|expenses|goals|budgets|investments|preferences`, optionally with `--from`, `--to`, or `--month`.
 
-- For components, boundaries, or future integrations, read [`references/architecture.md`](references/architecture.md).
-- Before any persistence, encryption, key, backup, export, or recovery work, read [`references/security.md`](references/security.md).
-- For entity semantics, calculations, identifiers, transfers, or currencies, read [`references/data-model.md`](references/data-model.md) and the relevant file in [`schemas/`](schemas/).
-- For memory capture, retrieval, retention, or deletion, read [`memory/CONTRACT.md`](memory/CONTRACT.md) and validate against [`memory/memory-record.schema.json`](memory/memory-record.schema.json).
-- For sequencing or scope decisions, read [`CHECKLIST.md`](CHECKLIST.md) for current evidence and [`references/roadmap.md`](references/roadmap.md) for phase intent.
-- For the supported runtime, lifecycle commands, dependency boundary, and current limitations, read [`references/runtime-phase2.md`](references/runtime-phase2.md).
-- For Phase 3 import/export, MCP hosting, authentication, limits, and gate evidence, read [`references/runtime-phase3.md`](references/runtime-phase3.md) and [`references/phase3-gate-report.md`](references/phase3-gate-report.md).
-- For the packaged ChatGPT skill/MCP workflow, local connection operations, evaluation coverage, and external connection boundary, read [`references/runtime-phase4.md`](references/runtime-phase4.md) and [`references/phase4-gate-report.md`](references/phase4-gate-report.md).
-- For Telegram hosting, authentication, allowlisting, replay/confirmation controls, lifecycle, and gate evidence, read [`references/runtime-phase5.md`](references/runtime-phase5.md), [`references/telegram-threat-model.md`](references/telegram-threat-model.md), and [`references/phase5-gate-report.md`](references/phase5-gate-report.md).
-- For the local dashboard, synthetic feeds, scheduler, notifications, incident handling, and gate evidence, read [`references/runtime-phase6.md`](references/runtime-phase6.md), [`references/dashboard-automation-threat-model.md`](references/dashboard-automation-threat-model.md), and [`references/phase6-gate-report.md`](references/phase6-gate-report.md).
+## Interpret requests
 
-## Interaction behavior
+- Classify ordinary earnings as income and ordinary consumption as expenses. Expense category rules in preferences take priority; otherwise use the built-in simple classifier.
+- Goal allocations are progress, never income or expenses.
+- Investment purchases, sales, contributions, withdrawals, dividends, valuations, and targets are investment records, not living expenses. Do not invent profit when valuation or basis is missing.
+- Ask only when a required amount, date, source/object, currency, or correction target cannot be resolved. Use the confirmed defaults otherwise.
+- For corrections, retrieve the record first and update by stable ID. Ask for explicit confirmation immediately before deletion, backup restoration, or any externally visible action.
+- Remember only confirmed currency, timezone, or category rules as preferences. Conversation history is not authoritative memory.
 
-For reads, return the minimum relevant result and distinguish recorded facts from estimates. For writes, show a normalized proposal and require explicit confirmation immediately before mutation. Never guess unresolved fields. After acceptance, return a concise receipt with stable IDs, status, store version, timestamp, and balance effects. A duplicate idempotency key returns the original receipt without another write.
+## Summaries and charts
 
-Channel adapters may authenticate, normalize, confirm, and render requests. Keep domain rules, storage access, credentials, and private memory out of channel code.
+Retrieve fresh data before answering. Label the period and currency, show tables when useful, and generate an on-demand chart from returned summary data when the interface supports it. Never combine different currencies without an explicitly supplied conversion rate.
 
-Finance OS records and organizes information; it does not guarantee financial outcomes or substitute for a licensed tax, legal, or investment professional.
+If storage, validation, authentication, or locking fails, say the record was not saved and show the concise error. Do not work around encryption or write plaintext financial data.

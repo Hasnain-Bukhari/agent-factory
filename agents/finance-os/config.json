@@ -1,0 +1,6 @@
+{
+  "default_currency": "THB",
+  "timezone": "Asia/Bangkok",
+  "telegram_transport": "long_polling",
+  "telegram_model": "gpt-4o-mini"
+}

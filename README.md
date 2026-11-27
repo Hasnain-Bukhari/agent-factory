@@ -1,6 +1,6 @@
 # Agent Factory
 
-This repository is a collection of standalone agents. Each agent owns its instructions, skill, domain references, schemas, and private memory namespace so it can be copied or developed without requiring a shared factory runtime.
+This repository is a collection of independent local agents. Each agent owns its skill, implementation, configuration, tests, integrations, and private memory.
 
 ## Repository layout
 
@@ -12,8 +12,8 @@ agent-factory/
     └── <agent-name>/
         ├── AGENTS.md
         ├── SKILL.md
-        ├── references/
-        ├── schemas/
+        ├── README.md
+        ├── src/
         └── memory/
 ```
 
@@ -21,14 +21,13 @@ The root defines lightweight conventions only. Agent-specific domain rules belon
 
 ## Agents
 
-- [`finance-os`](agents/finance-os/) — Phase 2 gate-passed local encrypted core for a private, multicurrency personal-finance agent. Its [completion checklist](agents/finance-os/CHECKLIST.md) records executable evidence and the still-gated path to a limited real-data pilot, imports/exports, MCP, and external channels. The runtime remains synthetic-only until a separate disclosure and explicit pilot approval.
+- [`finance-os`](agents/finance-os/) — a local encrypted personal-finance agent for income, expenses, goals, budgets, and investments, with optional Telegram long polling.
 
 ## Adding an agent
 
 1. Create `agents/<agent-name>/` using lowercase kebab-case.
-2. Give it an `AGENTS.md`, a discoverable `SKILL.md`, and its own `memory/` namespace.
-3. Keep domain references and schemas local to that agent.
-4. Document security boundaries and destructive actions before implementing them.
-5. Test with synthetic data. Never commit secrets, credentials, or private user records.
+2. Give it a discoverable `SKILL.md`, short `README.md`, and its own `memory/` namespace.
+3. Keep its implementation, configuration, integrations, and tests inside that directory.
+4. Test with synthetic data. Never commit secrets, credentials, or private user records.
 
-The intended experience is zero manual coding for the user: Codex creates and maintains the files, runs checks, and later guides any required account connection or consent step.
+Do not add shared runtimes, registries, orchestration, or scaffolding until real reuse requires them.

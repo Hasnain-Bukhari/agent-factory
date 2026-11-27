@@ -1,0 +1,14 @@
+{
+  "name": "finance-os",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test test/smoke.test.mjs",
+    "finance": "node finance.mjs",
+    "telegram:setup": "node src/telegram.mjs setup",
+    "telegram:start": "node src/telegram.mjs start",
+    "telegram:stop": "node src/telegram.mjs stop"
+  }
+}

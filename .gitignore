@@ -1,8 +1,6 @@
 .DS_Store
-agents/finance-os/runtime/.synthetic-data/
-agents/finance-os/runtime/.test-output/
-agents/finance-os/runtime/node_modules/
-agents/finance-os/runtime/*.log
+agents/*/node_modules/
+agents/*/*.log
 **/.DS_Store
 
 # Local secrets and credentials
@@ -19,4 +17,3 @@ agents/*/backups/
 agents/*/exports/
 agents/*/memory/*
 !agents/*/memory/.gitignore
-!agents/*/memory/README.md
