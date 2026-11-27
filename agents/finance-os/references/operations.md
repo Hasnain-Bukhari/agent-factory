@@ -46,6 +46,10 @@ Verify a current backup, create the new key version in the platform key store, r
 
 Provide separate controls to pause mutations, disable an individual channel, revoke channel credentials, and stop the local service. Revoking Telegram or MCP access must not delete the encrypted store. Suspected credential compromise requires immediate channel disablement, credential rotation, audit review, and user-visible status.
 
+For Telegram, pause locally before any external operation and invalidate outstanding channel confirmations. Rotation verifies new versioned token/webhook/route/confirmation secrets before activation and then removes superseded versions. Disconnect deletes only channel secrets and transient adapter state. Emergency revoke requests webhook deletion with pending-update drop; if that network action fails, keep the adapter paused and retain the token only for a controlled retry. Never ask the user to paste a bot token into chat, a repository file, a shell argument, or Finance OS memory. See [`runtime-phase5.md`](runtime-phase5.md).
+
+For Phase 6, revoke local dashboard sessions independently, pause or disable every schedule before maintenance, and disable notifications without touching the encrypted store. Feed outage must surface stale or missing labels and never create a recorded fact. A scheduler retry reuses the deterministic source identity. Notification delivery failures remain isolated and contain no financial values. See [`runtime-phase6.md`](runtime-phase6.md) and [`dashboard-automation-threat-model.md`](dashboard-automation-threat-model.md).
+
 ### Export and deletion
 
 Exports follow [`import-export.md`](import-export.md). Purge is a separate privacy workflow: identify exact scope, show consequences and backup implications, require explicit confirmation, create the permitted audit evidence, and verify removal from active data and scheduled retention. Secure deletion cannot be promised on copy-on-write filesystems or remote backups; state this limitation plainly.
@@ -62,6 +66,9 @@ Exports follow [`import-export.md`](import-export.md). Purge is a separate priva
 | Audit-chain failure | Blocked by default | Blocked | Preserve evidence; recover from verified generation |
 | Key unavailable | Blocked | Blocked | Check approved key store/recovery path; never guess |
 | Channel compromise | Local reads may remain | Affected channel blocked | Revoke/rotate channel credential |
+| Dashboard/session concern | Other approved channels may remain | Dashboard writes blocked | Revoke sessions; verify loopback/origin and audit |
+| Feed outage or poisoning | Recorded facts remain available | Feed-derived actions blocked | Show stale/missing; quarantine cache; retry bounded fetch |
+| Automation failure | Manual operation remains | Failed task isolated | Pause schedule; replay same source identity after review |
 
 ## Routine cadence
 

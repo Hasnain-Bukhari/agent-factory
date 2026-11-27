@@ -8,11 +8,11 @@ These instructions apply inside `agents/finance-os/`.
 - Time zone: Asia/Bangkok.
 - Support multiple currencies without rewriting historical source amounts.
 - Cover income, expenses, accounts, transfers, investments, liabilities, budgets, goals, net worth, and preferences.
-- Keep the interaction channel separate from financial logic so ChatGPT/MCP and Telegram can be adapters later.
+- Keep every interaction channel separate from financial logic; ChatGPT/MCP and Telegram are adapters over the same narrow boundary.
 
 ## Current implementation boundary
 
-Phase 3 has a gate-passed synthetic import/export runtime and loopback-only authenticated MCP surface. Passing the gate does not authorize real financial data, an external ChatGPT connection, or production claims: a limited pilot still requires a separate disclosure and fresh explicit user approval. Do not request secrets, start Phase 4, implement a dashboard, or connect an external channel unless separately authorized after its own gate.
+Phases 2–6 are gate-passed using synthetic data: encrypted local core, import/export and loopback MCP, portable ChatGPT workflow, an offline-tested Telegram webhook adapter, and local-only dashboard/automation interfaces. Passing these gates does not authorize real financial data, live ChatGPT/Telegram/feed/notification connections, public exposure, or production claims. Those require separate disclosure, deployment review, unavoidable account consent, and fresh explicit user approval. Do not request credentials in chat, contact external services during repository tests, or make the dashboard reachable beyond loopback.
 
 ## User experience contract
 
@@ -50,7 +50,7 @@ Phase 3 has a gate-passed synthetic import/export runtime and loopback-only auth
 
 ## Channel boundary
 
-- ChatGPT/MCP and Telegram are future adapters. They may authenticate, normalize, confirm, and render; they must not own financial rules or direct file access.
+- ChatGPT/MCP and Telegram adapters may authenticate, normalize, confirm, and render; they must not own financial rules or direct file/key access.
 - A channel event identifier may seed an idempotency key but never replaces Finance OS validation, authorization, or confirmation.
 - Never place Telegram tokens, MCP credentials, raw messages, or channel session data in Finance OS memory.
 

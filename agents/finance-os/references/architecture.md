@@ -9,9 +9,9 @@ The implementation sequence and release gates are tracked in [`../CHECKLIST.md`]
 ## Component boundaries
 
 ```text
-ChatGPT (future) / MCP ─┐
-                       ├─> Channel adapter -> Command boundary -> Application services
-Telegram (future) ─────┘                                      |
+ChatGPT / MCP ──────────┐
+Telegram webhook ───────┼─> Channel/local client -> Command boundary -> Application services
+Local dashboard/jobs ───┘                                             |
                                                               v
                                                      Finance domain core
                                                               |
@@ -23,7 +23,7 @@ Telegram (future) ─────┘                                      |
 
 ### Channel adapters
 
-Adapters authenticate a caller, normalize channel-specific messages, and render responses. They must not contain balance, budget, transfer, or valuation rules. The Phase 3 MCP adapter uses the shared command boundary and domain services; a ChatGPT connection and Telegram remain future phases.
+Adapters and local clients authenticate a caller, normalize channel-specific input, and render responses. They must not contain balance, budget, transfer, or valuation rules. The Phase 3 MCP adapter uses the shared command boundary and domain services; the Phase 4 ChatGPT harness, Phase 5 Telegram adapter, and Phase 6 dashboard/scheduler are clients of that narrow boundary and have no storage or key access. Feeds remain untrusted non-canonical observations and notifications receive only minimal event codes.
 
 ### Command boundary
 

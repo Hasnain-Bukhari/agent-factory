@@ -24,23 +24,23 @@ The standalone Node.js core, typed domain workflow, authenticated encrypted stor
 
 Bounded dry-run CSV/JSON mapping, formula-injection protection, reviewed commit, safe plaintext/recipient-key export with crash cleanup, and a narrow authenticated loopback MCP/tool interface are executable and evidenced. Use cases rather than raw file access are exposed. Continue using synthetic data until the user explicitly approves a secure local test with their own records.
 
-## Phase 4 — ChatGPT experience
+## Phase 4 — ChatGPT experience (implemented, gate passed)
 
-Connect the MCP/tool surface to the Finance OS skill. Add proposal/confirmation/receipt interactions, concise reports, and privacy-preserving error handling. Validate permissions and minimum-data responses.
+The portable secret-free plugin and synthetic ChatGPT-to-MCP harness validate proposal/confirmation/receipt interactions, bounded reports, permissions, injection resistance, and privacy-minimal retention. A live external ChatGPT connection remains separately gated.
 
-## Phase 5 — Telegram adapter
+## Phase 5 — Telegram adapter (implemented, gate passed)
 
-Add Telegram as a separate channel adapter with webhook verification, allowlisted user/chat identity, replay protection, rate limits, command confirmation, secret rotation, and minimal message retention. The bot token lives in a secret store, never in repository files or Finance OS memory.
+The standalone webhook-only adapter verifies HTTPS, route and secret-header authenticity, one private user/chat allowlist, replay/idempotency, bounded commands, exact short-lived confirmation, rate/concurrency/timeout limits, pseudonymous audit events, secret rotation, pause/disconnect, and emergency revoke. The gate used injected synthetic secrets and network substitutes only; no Telegram endpoint was contacted.
 
-## Phase 6 — Optional dashboard and automation
+## Phase 6 — Optional dashboard and automation (implemented, gate passed)
 
-Only after the core and recovery path are stable, consider a local dashboard, scheduled summaries, exchange-rate/price feeds, and notifications. Each external feed gets explicit provenance, timeout, failure, and stale-data behavior.
+The local-only gateway uses signed expiring sessions, route authorization, CSRF controls, strict input validation, and exact mutation confirmation over the narrow application boundary. Bounded injected synthetic feeds label provenance, age, estimates, and conversions. Least-privilege schedules prevent overlap and replay; opt-in offline notifications enforce minimal content and quiet hours. No live feed, responder, public listener, credential, or real data is connected.
 
 ## Deferred decisions
 
 - whether a future version should move from encrypted snapshots to an encrypted embedded database;
 - public MCP hosting and external user authentication beyond the gate-passed loopback-only bearer model;
-- Telegram hosting and network exposure;
+- live Telegram hosting provider, DNS, certificate, and reverse-proxy implementation after the webhook-only self-hosted model selected for Phase 5 is explicitly approved;
 - user-selected backup destination and retention.
 
 Choose these in Phase 2 or later based on the actual host and deployment constraints, not by locking the foundation to speculative dependencies.

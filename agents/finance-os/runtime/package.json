@@ -1,6 +1,6 @@
 {
   "name": "finance-os-local-core",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -11,8 +11,8 @@
     "finance-os-mcp": "bin/finance-os-mcp.mjs"
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs",
-    "check": "node --test test/*.test.mjs",
+    "test": "node --test --test-concurrency=1 test/*.test.mjs",
+    "check": "node --test --test-concurrency=1 test/*.test.mjs",
     "health": "node bin/finance-os.mjs doctor",
     "start": "node bin/finance-os.mjs start",
     "stop": "node bin/finance-os.mjs stop"

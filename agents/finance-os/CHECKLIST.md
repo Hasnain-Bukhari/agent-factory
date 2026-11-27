@@ -18,9 +18,9 @@ Snapshot date: 2026-11-27.
 | Phase 1: foundation | **Design complete** | Instructions, skill, memory namespace, architecture, security, data semantics, roadmap, and JSON Schemas exist | Prohibited |
 | Phase 2: local encrypted core | **Security gate passed** | Locked standalone runtime, complete Phase 2 domain core, AEAD persistence, audit/idempotency, recovery controls, and 47 passing host tests; see `references/phase2-gate-report.md` | Synthetic only until separate explicit limited-pilot approval |
 | Phase 3: import/export and MCP | **Security gate passed** | Bounded portable import/export, crash-clean plaintext staging, and an authenticated loopback Streamable HTTP MCP server; see `references/phase3-gate-report.md` | Synthetic only; no external ChatGPT connection |
-| Phase 4: ChatGPT experience | Not started | Skill behavior is described; no connected tool surface | Prohibited |
-| Phase 5: Telegram | Not started | Adapter requirements are designed only | Prohibited |
-| Phase 6: dashboard/automation | Deferred | No dashboard, scheduler, feed, or notification runtime | Prohibited |
+| Phase 4: ChatGPT experience | **Interaction gate passed** | Portable plugin, authenticated MCP mapping, and 10 synthetic end-to-end channel tests; see `references/phase4-gate-report.md` | Synthetic only; no external ChatGPT connection |
+| Phase 5: Telegram | **Channel gate passed** | Standalone webhook adapter, threat/hosting record, lifecycle controls, and 9 synthetic adversarial tests; see `references/phase5-gate-report.md` | Synthetic only; no live Telegram connection |
+| Phase 6: dashboard/automation | **Optional gate passed** | Local gateway, bounded synthetic feeds, least-privilege scheduler, offline notifications, threat model, and 13 adversarial tests; see `references/phase6-gate-report.md` | Synthetic/offline only |
 
 The current repository is safe for synthetic design and implementation work. It is **not** ready to store personal finance records, accept credentials, expose an MCP server, or connect Telegram.
 
@@ -199,48 +199,54 @@ Acceptance criteria: unauthorized, malformed, replayed, over-broad, and prompt-i
 
 Dependencies: Phase 3 MCP gate; explicit user connection/consent.
 
-- [ ] Connect `SKILL.md` to the authenticated MCP tools without embedding secrets in the skill or memory.
-- [ ] Normalize natural-language requests into a visible structured proposal.
-- [ ] Ask a targeted question for ambiguity and require confirmation for deletion, overwrite, external disclosure, or material financial effect.
-- [ ] Return concise receipts with stable IDs, versions, and balance effects after accepted writes.
-- [ ] Clearly distinguish recorded facts, derived values, estimates, stale prices/rates, and professional-advice boundaries.
-- [ ] Minimize conversational and memory retention; never copy the financial store into agent memory.
-- [ ] Provide zero-code connection, disconnect, health, and recovery guidance.
-- [ ] Test prompt injection and malicious imported text through the full ChatGPT-to-domain path.
+- [x] Connect `SKILL.md` to the authenticated MCP tools without embedding secrets in the skill or memory.
+- [x] Normalize natural-language requests into a visible structured proposal.
+- [x] Ask a targeted question for ambiguity and require confirmation for deletion, overwrite, external disclosure, or material financial effect.
+- [x] Return concise receipts with stable IDs, versions, and balance effects after accepted writes.
+- [x] Clearly distinguish recorded facts, derived values, estimates, stale prices/rates, and professional-advice boundaries.
+- [x] Minimize conversational and memory retention; never copy the financial store into agent memory.
+- [x] Provide zero-code connection, disconnect, health, and recovery guidance.
+- [x] Test prompt injection and malicious imported text through the full ChatGPT-to-domain path.
 
 Acceptance criteria: representative user journeys work without code, and the chat channel cannot bypass domain validation, confirmation, idempotency, or audit.
+
+**Phase 4 interaction gate: passed 2026-11-27.** The secret-free portable plugin and 10-test synthetic ChatGPT harness exercise the authenticated loopback MCP boundary; all 72 runnable regression/integration tests pass. See [`references/phase4-gate-report.md`](references/phase4-gate-report.md). This does not authorize real data, an external ChatGPT connection, public exposure, or live Telegram use.
 
 ## Phase 5 — Telegram adapter
 
 Dependencies: Phase 3 MCP/domain surface; completed network threat model; selected hosting model; explicit user approval.
 
-- [ ] Keep Telegram code and credentials in a channel adapter, separate from domain/storage logic.
-- [ ] Store the bot token in a secret store and document rotation/revocation without ever placing it in files, logs, messages, or agent memory.
-- [ ] Verify webhook authenticity/secret path as applicable and require TLS.
-- [ ] Allowlist the intended Telegram user and chat; reject group, forwarded, edited, or unexpected context unless explicitly supported.
-- [ ] Bind update IDs to replay-resistant idempotency keys and handle redelivery safely.
-- [ ] Apply request size, attachment type/size, rate, concurrency, and timeout limits.
-- [ ] Render proposed mutations and require a short-lived confirmation bound to actor, chat, exact mutation hash, and expiry.
-- [ ] Minimize reply contents and Telegram-side persistence; warn that chat transport retains messages outside Finance OS control.
-- [ ] Provide agent-driven connect, verify, rotate, pause, disconnect, and emergency revoke workflows.
-- [ ] Audit channel actions using pseudonymous actor identifiers without message text.
+- [x] Keep Telegram code and credentials in a channel adapter, separate from domain/storage logic.
+- [x] Store the bot token in a secret store and document rotation/revocation without ever placing it in files, logs, messages, or agent memory.
+- [x] Verify webhook authenticity/secret path as applicable and require TLS.
+- [x] Allowlist the intended Telegram user and chat; reject group, forwarded, edited, or unexpected context unless explicitly supported.
+- [x] Bind update IDs to replay-resistant idempotency keys and handle redelivery safely.
+- [x] Apply request size, attachment type/size, rate, concurrency, and timeout limits.
+- [x] Render proposed mutations and require a short-lived confirmation bound to actor, chat, exact mutation hash, and expiry.
+- [x] Minimize reply contents and Telegram-side persistence; warn that chat transport retains messages outside Finance OS control.
+- [x] Provide agent-driven connect, verify, rotate, pause, disconnect, and emergency revoke workflows.
+- [x] Audit channel actions using pseudonymous actor identifiers without message text.
 
 Acceptance criteria: wrong-user/chat, replay, forged webhook, expired confirmation, token rotation, rate-limit, network failure, and duplicate-delivery tests pass.
+
+**Phase 5 channel gate: passed 2026-11-27.** The webhook-only adapter, selected reverse-proxy/TLS hosting model, lifecycle controls, and 9 synthetic adversarial tests are evidenced in [`references/phase5-gate-report.md`](references/phase5-gate-report.md). No Telegram endpoint, live token, or real financial data was used. Live deployment remains separately blocked on provider/edge/secret-store review and explicit approval.
 
 ## Phase 6 — Optional dashboard, feeds, and automation
 
 Dependencies: stable Phase 2 recovery path; channel security; separate product approval. These capabilities are not required for the core agent.
 
-- [ ] Define a local-only dashboard threat model and session authentication before implementation.
-- [ ] Make the dashboard a client of the same narrow application boundary; no direct file or key access.
-- [ ] Protect state-changing actions with authorization, CSRF controls, validation, and the same confirmation policy.
-- [ ] Label stale, missing, estimated, and converted values with observation times and provenance.
-- [ ] Treat exchange-rate and price feeds as untrusted, bounded inputs with retry, timeout, cache, stale-data, and outage behavior.
-- [ ] Run scheduled work under least privilege with overlap prevention and idempotency.
-- [ ] Make notifications opt-in, content-minimal, quiet-hour aware, and free of sensitive values by default.
-- [ ] Provide pause/disable controls and audit configuration changes.
+- [x] Define a local-only dashboard threat model and session authentication before implementation.
+- [x] Make the dashboard a client of the same narrow application boundary; no direct file or key access.
+- [x] Protect state-changing actions with authorization, CSRF controls, validation, and the same confirmation policy.
+- [x] Label stale, missing, estimated, and converted values with observation times and provenance.
+- [x] Treat exchange-rate and price feeds as untrusted, bounded inputs with retry, timeout, cache, stale-data, and outage behavior.
+- [x] Run scheduled work under least privilege with overlap prevention and idempotency.
+- [x] Make notifications opt-in, content-minimal, quiet-hour aware, and free of sensitive values by default.
+- [x] Provide pause/disable controls and audit configuration changes.
 
 Acceptance criteria: dashboard and automation failures cannot corrupt the store, bypass confirmations, leak secrets, or silently convert stale estimates into recorded facts.
+
+**Phase 6 optional gate: passed 2026-11-27.** The transport-neutral local gateway and injected automation interfaces pass the full synthetic regression suite and Phase 6 adversarial tests. See [`references/phase6-gate-report.md`](references/phase6-gate-report.md). No public listener, live feed, external notification, credential, or real financial data is authorized or connected.
 
 ## Release and operational gates
 
@@ -254,9 +260,9 @@ Acceptance criteria: dashboard and automation failures cannot corrupt the store,
 
 ### Before each channel release
 
-- [ ] Authentication, authorization, replay, confirmation, rate-limit, privacy, and disconnect tests pass for that channel.
-- [ ] The channel has no direct persistence, filesystem, key-store, or unrestricted query capability.
-- [ ] Emergency pause/revoke is tested and documented in [`references/operations.md`](references/operations.md).
+- [x] Authentication, authorization, replay, confirmation, rate-limit, privacy, and disconnect tests pass for the implemented ChatGPT and Telegram channel adapters.
+- [x] The implemented channel adapters have no direct persistence, filesystem, key-store, or unrestricted query capability.
+- [x] Emergency pause/revoke is tested and documented in [`references/operations.md`](references/operations.md).
 
 ### Before a production release
 
@@ -274,8 +280,8 @@ Acceptance criteria: dashboard and automation failures cannot corrupt the store,
 - [x] Platform key-store implementation — macOS Keychain generic-password entries on the supported host.
 - [x] Encrypted snapshot/journal versus encrypted embedded database — authenticated encrypted snapshots with staged operation journals and last-known-good generations.
 - [x] MCP hosting and owner authentication — official SDK Streamable HTTP, stateless JSON response mode, loopback-only binding, owner/client-bound scoped bearer credentials from an owner-only file.
-- [ ] Telegram webhook/polling and hosting exposure — decide before Phase 5.
+- [x] Telegram transport model — webhook-only behind a reviewed TLS reverse proxy; live host/provider/DNS/certificate choices remain deployment-specific and separately gated.
 - [ ] Backup destination and retention — user choice before real data.
-- [ ] Dashboard, feeds, and notifications — optional after recovery is stable.
+- [x] Dashboard, feeds, and notifications — local-only synthetic/offline interfaces implemented; live providers, responders, durable scheduler state, and deployment remain separately gated.
 
 Deferral does not waive a gate. If a decision affects confidentiality, integrity, authorization, or recovery, real data remains prohibited until the decision is made and tested.

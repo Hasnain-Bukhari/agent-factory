@@ -6,7 +6,7 @@ Last reconciled: 2026-11-27 (Asia/Bangkok).
 
 ## Current phase
 
-Phase 3 gate closure is complete. Bounded portable CSV/JSON import, plaintext and recipient-key encrypted export, crash cleanup, synthetic round trips, and the authenticated loopback MCP surface are executable and evidenced. Phase 4 has not started. Real financial data still requires a separate explicit limited-pilot disclosure and approval.
+Phase 6 optional gate closure is complete. The local dashboard gateway, bounded feed client, least-privilege scheduler, and privacy-minimal notifier are executable through injected interfaces using synthetic data and offline doubles only. No public listener, feed provider, notification service, credential, or real financial data was used. Real data and live external connections still require separate disclosure, deployment review, and explicit approval.
 
 ## Phase 2 blockers
 
@@ -35,21 +35,26 @@ Phase 3 gate closure is complete. Bounded portable CSV/JSON import, plaintext an
 
 ## Phase 4 blockers
 
-- [x] Phase 3 MCP prerequisite passed; Phase 4 remains not started pending separate authorization.
-- [ ] Connect the Finance OS skill to the authenticated tool surface.
-- [ ] Validate proposal, ambiguity, confirmation, receipt, privacy, replay, and prompt-injection journeys.
+- [x] Phase 3 MCP prerequisite passed; Phase 4 synthetic implementation was authorized.
+- [x] Connect the Finance OS skill to the authenticated tool surface.
+- [x] Validate proposal, ambiguity, confirmation, receipt, privacy, replay, and prompt-injection journeys.
+- [x] Record the Phase 4 gate in `references/phase4-gate-report.md` from fresh executable evidence.
 
 ## Phase 5 blockers
 
-- [ ] Blocked until the Phase 4 interaction gate passes.
-- [ ] Implement the Telegram adapter, authentication/allowlist, replay protection, short-lived confirmations, rate limits, and emergency revoke.
-- [ ] Use synthetic credentials/test harnesses only until explicit live connection approval.
+- [x] Phase 4 interaction gate passed; Phase 5 synthetic implementation was authorized.
+- [x] Implement the Telegram adapter, authentication/allowlist, replay protection, short-lived confirmations, rate limits, and emergency revoke.
+- [x] Use only synthetic credentials, synthetic records, injected network substitutes, and loopback MCP for the Phase 5 gate.
+- [x] Complete adversarial review and repair unsafe webhook/route secret grammar, concurrent duplicate-delivery recovery, and collision-resistant audit event IDs.
+- [ ] Before any live connection, select and review the host, TLS edge, DNS/certificate lifecycle, production secret-store adapter, egress policy, monitoring retention, and incident contact; then obtain explicit approval.
 
 ## Phase 6 blockers
 
-- [ ] Blocked until the encrypted core and channel gates pass.
-- [ ] Implement the optional local dashboard, feeds, schedules, and privacy-minimal notifications through the same application boundary.
-- [ ] Validate authorization, CSRF, stale-data labeling, scheduler overlap/idempotency, and failure isolation.
+- [x] Encrypted core and channel gates passed; Phase 6 synthetic implementation was authorized.
+- [x] Implement the optional local dashboard, feeds, schedules, and privacy-minimal notifications through the same application boundary.
+- [x] Validate authorization, CSRF, exact confirmation, stale/missing/estimated/converted labels, feed poisoning/limits/outage, scheduler overlap/replay/failure, notification privacy/quiet hours, prompt injection, and failure isolation.
+- [x] Complete an independent adversarial pass and repair missing login throttling/browser headers, separator-ambiguous scheduler names, and cross-file test contention before gate closure.
+- [ ] Before live use, select and review a loopback HTTP wrapper and credential store, durable scheduler state, feed provider/egress policy, notification transport/retention/revocation, and incident owner; then obtain explicit approval.
 
 ## Global release blockers
 
