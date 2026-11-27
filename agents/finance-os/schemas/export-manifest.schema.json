@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-factory.local/finance-os/schemas/export-manifest.schema.json",
+  "title": "Finance OS Portable Export Manifest",
+  "description": "Non-secret metadata for a reviewed plaintext or recipient-key encrypted CSV/JSON export.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "export_id", "store_id", "store_version", "format", "created_at", "base_currency", "encrypted", "file_name", "record_counts", "scope"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "export_id": { "type": "string", "format": "uuid" },
+    "store_id": { "type": "string", "format": "uuid" },
+    "store_version": { "type": "integer", "minimum": 0 },
+    "format": { "enum": ["csv", "json"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "base_currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+    "encrypted": { "type": "boolean" },
+    "file_name": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$", "maxLength": 200 },
+    "key_id": { "type": "string", "pattern": "^[A-Za-z0-9._:-]{1,120}$" },
+    "envelope_version": { "const": "1" },
+    "record_counts": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 },
+      "propertyNames": { "enum": ["preferences", "accounts", "ledger_entries", "transfers", "investments", "liabilities", "budgets", "goals", "net_worth_snapshots", "exchange_rates"] }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_types", "date_from", "date_to", "currencies"],
+      "properties": {
+        "record_types": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["preferences", "account", "ledger_entry", "transfer", "investment", "liability", "budget", "goal", "net_worth_snapshot", "exchange_rate"] } },
+        "date_from": { "type": ["string", "null"], "format": "date-time" },
+        "date_to": { "type": ["string", "null"], "format": "date-time" },
+        "currencies": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Z]{3}$" } }
+      }
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "encrypted": { "const": true } }, "required": ["encrypted"] }, "then": { "required": ["key_id", "envelope_version"] }, "else": { "not": { "anyOf": [{ "required": ["key_id"] }, { "required": ["envelope_version"] }] } } }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "schema_version": "1.0.0",
+  "store_id": "00000000-0000-4000-8000-000000000001",
+  "store_version": 3,
+  "preferences": {
+    "base_currency": "THB",
+    "time_zone": "Asia/Bangkok",
+    "locale": "en-TH",
+    "week_starts_on": "monday",
+    "fiscal_year_start_month": 1,
+    "backup_retention_generations": 7
+  },
+  "accounts": [
+    {
+      "id": "10000000-0000-4000-8000-000000000001",
+      "created_at": "2026-01-01T00:00:00+07:00",
+      "updated_at": "2026-01-01T00:00:00+07:00",
+      "status": "active",
+      "name": "Synthetic THB Wallet",
+      "account_type": "cash",
+      "currency": "THB",
+      "include_in_net_worth": true
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000002",
+      "created_at": "2026-01-01T00:00:00+07:00",
+      "updated_at": "2026-01-01T00:00:00+07:00",
+      "status": "active",
+      "name": "Synthetic USD Wallet",
+      "account_type": "bank",
+      "currency": "USD",
+      "include_in_net_worth": true
+    }
+  ],
+  "ledger_entries": [
+    {
+      "id": "20000000-0000-4000-8000-000000000001",
+      "created_at": "2026-01-02T09:00:00+07:00",
+      "updated_at": "2026-01-02T09:00:00+07:00",
+      "status": "active",
+      "entry_type": "income",
+      "account_id": "10000000-0000-4000-8000-000000000001",
+      "amount": { "minor_units": "500000", "currency": "THB" },
+      "occurred_at": "2026-01-02T09:00:00+07:00",
+      "posting_status": "posted",
+      "category": "Synthetic income",
+      "idempotency_key": "fixture-income-001",
+      "source": "system"
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000002",
+      "created_at": "2026-01-03T09:00:00+07:00",
+      "updated_at": "2026-01-03T09:00:00+07:00",
+      "status": "active",
+      "entry_type": "expense",
+      "account_id": "10000000-0000-4000-8000-000000000001",
+      "amount": { "minor_units": "-10000", "currency": "THB" },
+      "occurred_at": "2026-01-03T09:00:00+07:00",
+      "posting_status": "posted",
+      "category": "Synthetic food",
+      "idempotency_key": "fixture-expense-001",
+      "source": "system"
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000003",
+      "created_at": "2026-01-04T09:00:00+07:00",
+      "updated_at": "2026-01-04T09:00:00+07:00",
+      "status": "active",
+      "entry_type": "transfer_out",
+      "account_id": "10000000-0000-4000-8000-000000000001",
+      "amount": { "minor_units": "-350000", "currency": "THB" },
+      "occurred_at": "2026-01-04T09:00:00+07:00",
+      "posting_status": "posted",
+      "transfer_id": "30000000-0000-4000-8000-000000000001",
+      "idempotency_key": "fixture-transfer-out-001",
+      "source": "system"
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000004",
+      "created_at": "2026-01-04T09:00:00+07:00",
+      "updated_at": "2026-01-04T09:00:00+07:00",
+      "status": "active",
+      "entry_type": "transfer_in",
+      "account_id": "10000000-0000-4000-8000-000000000002",
+      "amount": { "minor_units": "10000", "currency": "USD" },
+      "occurred_at": "2026-01-04T09:00:00+07:00",
+      "posting_status": "posted",
+      "transfer_id": "30000000-0000-4000-8000-000000000001",
+      "idempotency_key": "fixture-transfer-in-001",
+      "source": "system"
+    }
+  ],
+  "transfers": [
+    {
+      "id": "30000000-0000-4000-8000-000000000001",
+      "created_at": "2026-01-04T09:00:00+07:00",
+      "updated_at": "2026-01-04T09:00:00+07:00",
+      "status": "active",
+      "source_account_id": "10000000-0000-4000-8000-000000000001",
+      "destination_account_id": "10000000-0000-4000-8000-000000000002",
+      "out_entry_id": "20000000-0000-4000-8000-000000000003",
+      "in_entry_id": "20000000-0000-4000-8000-000000000004",
+      "source_amount": { "minor_units": "350000", "currency": "THB" },
+      "destination_amount": { "minor_units": "10000", "currency": "USD" },
+      "exchange_rate_id": "90000000-0000-4000-8000-000000000001",
+      "occurred_at": "2026-01-04T09:00:00+07:00"
+    }
+  ],
+  "investments": [
+    {
+      "id": "40000000-0000-4000-8000-000000000001",
+      "created_at": "2026-01-05T09:00:00+07:00",
+      "updated_at": "2026-01-05T09:00:00+07:00",
+      "status": "active",
+      "account_id": "10000000-0000-4000-8000-000000000002",
+      "instrument_id": "SYNTH-ETF",
+      "transaction_type": "buy",
+      "quantity": "2.5",
+      "cash_amount": { "minor_units": "-2500", "currency": "USD" },
+      "unit_price": { "minor_units": "1000", "currency": "USD" },
+      "lot_method": "fifo",
+      "occurred_at": "2026-01-05T09:00:00+07:00",
+      "idempotency_key": "fixture-investment-001"
+    }
+  ],
+  "liabilities": [
+    {
+      "id": "50000000-0000-4000-8000-000000000001",
+      "created_at": "2026-01-01T00:00:00+07:00",
+      "updated_at": "2026-01-01T00:00:00+07:00",
+      "status": "active",
+      "name": "Synthetic Loan",
+      "liability_type": "personal_loan",
+      "currency": "THB",
+      "include_in_net_worth": true,
+      "annual_interest_rate": "3.5",
+      "due_day": 15
+    }
+  ],
+  "budgets": [
+    {
+      "id": "60000000-0000-4000-8000-000000000001",
+      "created_at": "2026-01-01T00:00:00+07:00",
+      "updated_at": "2026-01-01T00:00:00+07:00",
+      "status": "active",
+      "name": "Synthetic Food Budget",
+      "period": "monthly",
+      "limit": { "minor_units": "100000", "currency": "THB" },
+      "starts_on": "2026-01-01",
+      "categories": ["Synthetic food"]
+    }
+  ],
+  "goals": [
+    {
+      "id": "70000000-0000-4000-8000-000000000001",
+      "created_at": "2026-01-01T00:00:00+07:00",
+      "updated_at": "2026-01-01T00:00:00+07:00",
+      "status": "active",
+      "name": "Synthetic Emergency Fund",
+      "goal_type": "savings",
+      "target": { "minor_units": "1000000", "currency": "THB" },
+      "target_date": "2026-12-31",
+      "linked_account_ids": ["10000000-0000-4000-8000-000000000001"]
+    }
+  ],
+  "net_worth_snapshots": [
+    {
+      "id": "80000000-0000-4000-8000-000000000001",
+      "valued_at": "2026-01-31T23:59:59+07:00",
+      "base_currency": "THB",
+      "assets": { "minor_units": "500000", "currency": "THB" },
+      "liabilities": { "minor_units": "100000", "currency": "THB" },
+      "net_worth": { "minor_units": "400000", "currency": "THB" },
+      "components": []
+    }
+  ],
+  "exchange_rates": [
+    {
+      "id": "90000000-0000-4000-8000-000000000001",
+      "base_currency": "USD",
+      "quote_currency": "THB",
+      "rate": "35.0",
+      "observed_at": "2026-01-04T09:00:00+07:00",
+      "source": "synthetic-fixture",
+      "is_estimate": true
+    }
+  ],
+  "audit_events": [
+    {
+      "id": "a0000000-0000-4000-8000-000000000001",
+      "occurred_at": "2026-01-02T09:00:00+07:00",
+      "actor_ref": "synthetic-test-agent",
+      "channel": "system",
+      "action": "fixture.create",
+      "target_ids": ["20000000-0000-4000-8000-000000000001"],
+      "previous_store_version": 0,
+      "new_store_version": 1,
+      "idempotency_key": "fixture:audit:0001",
+      "outcome": "accepted",
+      "previous_event_auth": "GENESIS",
+      "event_auth": "0000000000000000000000000000000000000000000000000000000000000001",
+      "auth_algorithm": "HMAC-SHA-256",
+      "key_version": 1
+    },
+    {
+      "id": "a0000000-0000-4000-8000-000000000002",
+      "occurred_at": "2026-01-03T09:00:00+07:00",
+      "actor_ref": "synthetic-test-agent",
+      "channel": "system",
+      "action": "fixture.create",
+      "target_ids": ["20000000-0000-4000-8000-000000000002"],
+      "previous_store_version": 1,
+      "new_store_version": 2,
+      "idempotency_key": "fixture:audit:0002",
+      "outcome": "accepted",
+      "previous_event_auth": "0000000000000000000000000000000000000000000000000000000000000001",
+      "event_auth": "0000000000000000000000000000000000000000000000000000000000000002",
+      "auth_algorithm": "HMAC-SHA-256",
+      "key_version": 1
+    },
+    {
+      "id": "a0000000-0000-4000-8000-000000000003",
+      "occurred_at": "2026-01-04T09:00:00+07:00",
+      "actor_ref": "synthetic-test-agent",
+      "channel": "system",
+      "action": "fixture.transfer",
+      "target_ids": ["30000000-0000-4000-8000-000000000001"],
+      "previous_store_version": 2,
+      "new_store_version": 3,
+      "idempotency_key": "fixture:audit:0003",
+      "outcome": "accepted",
+      "previous_event_auth": "0000000000000000000000000000000000000000000000000000000000000002",
+      "event_auth": "0000000000000000000000000000000000000000000000000000000000000003",
+      "auth_algorithm": "HMAC-SHA-256",
+      "key_version": 1
+    }
+  ],
+  "idempotency_receipts": [
+    {
+      "key": "fixture-transfer-001",
+      "scope": "fixture:create_transfer:fixture-transfer-001",
+      "command_type": "create_transfer",
+      "accepted_at": "2026-01-04T09:00:00+07:00",
+      "result_ids": ["30000000-0000-4000-8000-000000000001"],
+      "store_version": 3,
+      "request_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+      "input_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+      "status": "accepted",
+      "audit_id": "a0000000-0000-4000-8000-000000000003"
+    }
+  ]
+}

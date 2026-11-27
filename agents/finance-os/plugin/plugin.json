@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "finance-os",
+  "version": "0.4.0",
+  "description": "Private, confirmation-gated personal-finance records and summaries through a narrow authenticated MCP service.",
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/finance-os/SKILL.md",
+      "interface": {
+        "displayName": "Finance OS",
+        "shortDescription": "Private finance records with confirmation-gated writes",
+        "longDescription": "Review bounded Finance OS summaries and propose personal-finance record changes. Every write is validated, shown as an exact proposal, freshly confirmed, audited, and returned with a receipt.",
+        "developerName": "Agent Factory",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "defaultPrompt": [
+          "Show my Finance OS overview and label recorded versus derived values.",
+          "List my Finance OS accounts so I can choose one for a new entry.",
+          "Propose recording an expense in Finance OS; do not commit until I confirm the exact proposal."
+        ],
+        "brandColor": "#0F766E"
+      }
+    }
+  }
+}

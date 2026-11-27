@@ -1,0 +1,22 @@
+.DS_Store
+agents/finance-os/runtime/.synthetic-data/
+agents/finance-os/runtime/.test-output/
+agents/finance-os/runtime/node_modules/
+agents/finance-os/runtime/*.log
+**/.DS_Store
+
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.secret
+
+# Agent-owned runtime data must never be committed. Runtime source code remains trackable.
+agents/*/runtime-data/
+agents/*/backups/
+agents/*/exports/
+agents/*/memory/*
+!agents/*/memory/.gitignore
+!agents/*/memory/README.md

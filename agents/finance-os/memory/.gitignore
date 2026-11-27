@@ -1,0 +1,6 @@
+*
+!.gitignore
+!README.md
+!CONTRACT.md
+!SYNTHETIC-EXAMPLES.md
+!memory-record.schema.json
