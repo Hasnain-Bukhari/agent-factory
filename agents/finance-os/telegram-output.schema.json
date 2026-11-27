@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "action": { "type": "string", "enum": ["record_income", "record_expense", "create_goal", "allocate_goal", "create_budget", "record_investment", "update_record", "delete_record", "set_preference", "summary", "list", "clarify"] },
+    "record_type": { "type": ["string", "null"] },
+    "id": { "type": ["string", "null"] },
+    "amount": { "type": ["string", "null"] },
+    "currency": { "type": ["string", "null"] },
+    "date": { "type": ["string", "null"] },
+    "source": { "type": ["string", "null"] },
+    "description": { "type": ["string", "null"] },
+    "category": { "type": ["string", "null"] },
+    "notes": { "type": ["string", "null"] },
+    "goal_name": { "type": ["string", "null"] },
+    "target_date": { "type": ["string", "null"] },
+    "month": { "type": ["string", "null"] },
+    "investment_action": { "type": ["string", "null"] },
+    "asset": { "type": ["string", "null"] },
+    "query_kind": { "type": ["string", "null"] },
+    "from": { "type": ["string", "null"] },
+    "to": { "type": ["string", "null"] },
+    "preference_key": { "type": ["string", "null"] },
+    "preference_value": { "type": ["string", "null"] },
+    "reply": { "type": "string" }
+  },
+  "required": ["action", "record_type", "id", "amount", "currency", "date", "source", "description", "category", "notes", "goal_name", "target_date", "month", "investment_action", "asset", "query_kind", "from", "to", "preference_key", "preference_value", "reply"]
+}

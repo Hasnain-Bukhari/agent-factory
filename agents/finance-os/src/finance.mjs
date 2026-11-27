@@ -114,6 +114,12 @@ export function applyCommand(store, command) {
     }
     case 'update_record': result = updateRecord(store, command.data || {}); break;
     case 'delete_record': result = deleteRecord(store, command.data || {}); break;
+    case 'delete_all_expenses': {
+      const deleted = store.expenses.length;
+      store.expenses = [];
+      result = { deleted, record_type: 'expense' };
+      break;
+    }
     default: throw new Error('Unsupported Finance OS command.');
   }
   const receipt = { saved: true, type: command.type, result };

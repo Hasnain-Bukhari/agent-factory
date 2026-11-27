@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { applyCommand, summarize } from '../src/finance.mjs';
 import { createBackup, initialize, MemoryKeyProvider, readStore, restoreBackup, updateStore } from '../src/storage.mjs';
-import { handleTelegramUpdate, interpretWithOpenAI } from '../src/telegram.mjs';
+import { handleTelegramUpdate, interpretWithCodex } from '../src/telegram.mjs';
 
 async function fixture(t) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'finance-os-')); t.after(() => rm(root, { recursive: true, force: true }));
@@ -66,11 +66,27 @@ test('authorized Telegram writes use the shared store and ignore replay', async 
   assert.equal((await readStore(dataDir, keys)).expenses.length, 1); assert.equal(calls, 1);
 });
 
-test('Telegram interpreter uses schema-constrained, non-stored API responses', async t => {
-  const { dataDir, keys } = await fixture(t), store = await readStore(dataDir, keys); let request;
-  const parsed = await interpretWithOpenAI('I spent 85 baht on coffee', store, 'synthetic-key', async (url, options) => {
-    request = { url, body: JSON.parse(options.body) };
-    return { ok: true, json: async () => ({ status: 'completed', output: [{ content: [{ type: 'output_text', text: JSON.stringify({ action: 'record_expense', record_type: null, id: null, amount: '85', currency: 'THB', date: '2026-11-28', source: null, description: 'coffee', category: null, notes: null, goal_name: null, target_date: null, month: null, investment_action: null, asset: null, query_kind: null, from: null, to: null, preference_key: null, preference_value: null, reply: 'Saved.' }) }] }] }) };
+test('Telegram bulk expense deletion requires the exact confirmation and preserves other records', async t => {
+  const { dataDir, keys } = await fixture(t);
+  await save(dataDir, keys, { type: 'record_expense', data: { amount: '85', date: '2026-11-27', description: 'coffee' } });
+  await save(dataDir, keys, { type: 'record_income', data: { amount: '50000', date: '2026-11-01', source: 'salary' } });
+  const request = { update_id: 8, message: { text: 'delete all expenses', from: { id: 42 }, chat: { id: 42, type: 'private' } } };
+  const prompted = await handleTelegramUpdate(request, { authorizedUserId: 42, dataDir, keys, interpret: async () => ({ action: 'delete_record', record_type: 'expense', id: null }) });
+  assert.match(prompted.reply, /CONFIRM DELETE ALL EXPENSES/);
+  assert.equal((await readStore(dataDir, keys)).expenses.length, 1);
+  const confirmation = { update_id: 9, message: { text: 'CONFIRM DELETE ALL EXPENSES', from: { id: 42 }, chat: { id: 42, type: 'private' } } };
+  const deleted = await handleTelegramUpdate(confirmation, { authorizedUserId: 42, dataDir, keys, interpret: async () => { throw new Error('confirmation must bypass interpretation'); } });
+  const store = await readStore(dataDir, keys);
+  assert.match(deleted.reply, /Deleted 1 expense record/);
+  assert.equal(store.expenses.length, 0);
+  assert.equal(store.incomes.length, 1);
+});
+
+test('Telegram interpreter gives untrusted financial text to a structured Codex CLI runner', async t => {
+  const { dataDir, keys } = await fixture(t), store = await readStore(dataDir, keys); let prompt;
+  const parsed = await interpretWithCodex('I spent 85 baht on coffee', store, async value => {
+    prompt = value;
+    return JSON.stringify({ action: 'record_expense', record_type: null, id: null, amount: '85', currency: 'THB', date: '2026-11-28', source: null, description: 'coffee', category: null, notes: null, goal_name: null, target_date: null, month: null, investment_action: null, asset: null, query_kind: null, from: null, to: null, preference_key: null, preference_value: null, reply: 'Saved.' });
   });
-  assert.equal(parsed.action, 'record_expense'); assert.equal(request.url, 'https://api.openai.com/v1/responses'); assert.equal(request.body.model, 'gpt-4o-mini'); assert.equal(request.body.store, false); assert.equal(request.body.text.format.strict, true);
+  assert.equal(parsed.action, 'record_expense'); assert.match(prompt, /without using tools/); assert.match(prompt, /untrusted data/); assert.match(prompt, /I spent 85 baht on coffee/);
 });
